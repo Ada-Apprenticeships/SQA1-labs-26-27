@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}{{ event.title }}{% endblock %}
+{% block content %}
+  <article>
+    <h1>{{ event.title }}</h1>
+    <p class="meta">{{ event.starts_at.strftime('%d %b %Y, %H:%M') }} · {{ event.location }} · organised by {{ event.organiser.username }}</p>
+    <p>{{ event.description }}</p>
+    <p class="meta">Capacity: {{ event.capacity }}</p>
+  </article>
+  {% block booking %}{% endblock %}
+{% endblock %}

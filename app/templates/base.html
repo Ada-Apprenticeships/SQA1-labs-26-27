@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Ada Events{% endblock %}</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 52rem; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; }
+    nav { display: flex; gap: 1rem; align-items: center; border-bottom: 1px solid #ccc; padding-bottom: .5rem; }
+    nav form { display: inline; }
+    .flash { background: #fff6d5; padding: .5rem; margin: 1rem 0; }
+    .meta { color: #555; font-size: .9rem; }
+    article { border-bottom: 1px solid #eee; padding: 1rem 0; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="{{ url_for('events.index') }}">Events</a>
+    {% block nav_extra %}{% endblock %}
+    {% if g.user %}
+      <span>Signed in as {{ g.user.username }}</span>
+      <form method="post" action="{{ url_for('auth.logout') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit">Log out</button>
+      </form>
+    {% else %}
+      <a href="{{ url_for('auth.register') }}">Register</a>
+      <a href="{{ url_for('auth.login') }}">Log in</a>
+    {% endif %}
+  </nav>
+  {% for message in get_flashed_messages() %}
+    <div class="flash">{{ message }}</div>
+  {% endfor %}
+  <main>{% block content %}{% endblock %}</main>
+</body>
+</html>

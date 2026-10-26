@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Upcoming events</h1>
+  {% for event in events %}
+    <article>
+      <h2><a href="{{ url_for('events.view', event_id=event.id) }}">{{ event.title }}</a></h2>
+      <p class="meta">{{ event.starts_at.strftime('%d %b %Y, %H:%M') }} · {{ event.location }}</p>
+    </article>
+  {% else %}
+    <p>No upcoming events.</p>
+  {% endfor %}
+{% endblock %}
