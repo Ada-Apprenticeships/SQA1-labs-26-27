@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}My bookings{% endblock %}
+{% block content %}
+  <h1>My bookings</h1>
+  <form method="get">
+    <input name="q" value="{{ q }}" placeholder="Filter by event title">
+    <button type="submit">Filter</button>
+  </form>
+  {% for b in bookings %}
+    <article>
+      <h2><a href="{{ url_for('events.view', event_id=b.event.id) }}">{{ b.event.title }}</a></h2>
+      <p class="meta">{{ b.event.starts_at.strftime('%d %b %Y, %H:%M') }} · {{ b.party_size }} place(s)</p>
+      <form method="post" action="{{ url_for('bookings.cancel', booking_id=b.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit">Cancel booking</button>
+      </form>
+    </article>
+  {% else %}
+    <p>You have no bookings.</p>
+  {% endfor %}
+{% endblock %}

@@ -14,9 +14,10 @@ def create_app(config=None):
     db.init_app(app)
     csrf.init_app(app)
 
-    from . import auth, events
+    from . import auth, bookings, events
     app.register_blueprint(auth.bp)
     app.register_blueprint(events.bp)
+    app.register_blueprint(bookings.bp)
 
     from .cli import register_cli
     register_cli(app)

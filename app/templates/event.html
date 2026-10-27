@@ -5,7 +5,27 @@
     <h1>{{ event.title }}</h1>
     <p class="meta">{{ event.starts_at.strftime('%d %b %Y, %H:%M') }} · {{ event.location }} · organised by {{ event.organiser.username }}</p>
     <p>{{ event.description }}</p>
-    <p class="meta">Capacity: {{ event.capacity }}</p>
+    <p class="meta">Places left: {{ event.capacity - event.bookings|length }} of {{ event.capacity }}</p>
   </article>
-  {% block booking %}{% endblock %}
+  {% if g.user %}
+    <h2>Book places</h2>
+    <form method="post" action="{{ url_for('bookings.book', event_id=event.id) }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <p><label>Number of places (max 4)<br><input type="number" name="party_size" value="1" min="1" max="4"></label></p>
+      <p><label>Note for the organiser (optional)<br><input name="note" maxlength="200"></label></p>
+      <button type="submit">Book</button>
+    </form>
+  {% else %}
+    <p><a href="{{ url_for('auth.login') }}">Log in</a> to book.</p>
+  {% endif %}
+  {% if g.user and g.user.id == event.organiser_id %}
+    <h2>Attendees</h2>
+    <ul>
+    {% for b in event.bookings %}
+      <li>{{ b.user.username }} ({{ b.party_size }}){% if b.note %}: {{ b.note|safe }}{% endif %}</li>
+    {% else %}
+      <li>No bookings yet.</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
 {% endblock %}

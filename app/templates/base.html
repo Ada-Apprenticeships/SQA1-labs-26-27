@@ -18,6 +18,7 @@
     <a href="{{ url_for('events.index') }}">Events</a>
     {% block nav_extra %}{% endblock %}
     {% if g.user %}
+      <a href="{{ url_for('bookings.mine') }}">My bookings</a>
       <span>Signed in as {{ g.user.username }}</span>
       <form method="post" action="{{ url_for('auth.logout') }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
