@@ -24,7 +24,7 @@ You should see all tests pass. Keep that in mind: passing tests do not mean the 
 uv run flask --app run run --debug
 ```
 
-Open the preview on port 5000. Log in as `bob` (password `password123`), open an event and make a booking. Then log out and log in as `alice`, who organises every event, and look at the attendee list.
+The app opens in a new browser tab (port 5000). If it does not, open the **Ports** tab and click the globe icon next to port 5000. Log in as `bob` (password `password123`), open an event and make a booking. Then log out and log in as `alice`, who organises every event, and look at the attendee list.
 
 Stop the app with `Ctrl+C` when you are done.
 
@@ -42,7 +42,7 @@ git show HEAD -- app/bookings.py
 
 ## 5. Tidy up
 
-Close the preview. When you finish for the day, stop your codespace from **Code → Codespaces → ⋯ → Stop codespace** to save your free hours.
+Close the app's browser tab and press Ctrl+C in the terminal to stop the server. When you finish for the day, stop your codespace from **Code → Codespaces → ⋯ → Stop codespace** to save your free hours.
 
 ## Apply it to Assignment 1
 

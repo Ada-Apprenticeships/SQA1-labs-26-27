@@ -10,7 +10,7 @@ The lab instructions are in the [`labs`](labs/README.md) folder. Start with Lab 
 
 1. Choose **Code → Codespaces → Create codespace on main**.
 2. Wait for setup to finish.
-3. Run `uv run flask --app run run --debug` and open the preview on port 5000.
+3. Run `uv run flask --app run run --debug` The app opens in a new browser tab (port 5000). If it does not, open the **Ports** tab and click the globe icon next to port 5000.
 
 Seeded users: `alice` (organiser of every event), `bob` and `carol`. All passwords are `password123`.
 
