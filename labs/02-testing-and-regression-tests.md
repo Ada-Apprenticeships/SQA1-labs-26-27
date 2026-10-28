@@ -114,3 +114,114 @@ For every defect you fix in your assignment, follow the same pattern: failing te
 ## Stretch
 
 Rewrite one of the AI-generated tests in `tests/test_bookings.py` so it would actually fail if the feature broke.
+
+## Extension: Behaviour Driven Development (optional, about 20 minutes)
+
+**Behaviour Driven Development (BDD)** starts from behaviour described in plain language that a product owner, tester and developer can all agree on, before any code is written. Each behaviour is written as a **scenario** in the Given / When / Then form, known as Gherkin:
+
+- **Given** the starting situation;
+- **When** the action someone takes;
+- **Then** the outcome that should follow.
+
+The scenarios become the tests, so the requirements and the checks cannot drift apart.
+
+### 1. Write the scenarios
+
+Create a folder called `features` and a file `features/booking.feature`:
+
+```gherkin
+Feature: Booking places on an event
+  As an attendee
+  I want to book places on an event
+  So that I have a guaranteed place
+
+  Scenario: Booking the last remaining places
+    Given an event with 5 places
+    And 4 places are already booked
+    When carol books 1 place
+    Then the event is fully booked
+    And carol has a booking for 1 place
+
+  Scenario: Trying to book more places than remain
+    Given an event with 5 places
+    And 4 places are already booked
+    When carol tries to book 2 places
+    Then her booking is rejected
+    And 4 places are still booked
+```
+
+Notice that this is requirement R2 in words a non-developer can check.
+
+### 2. Turn each step into code
+
+Create `tests/test_booking_behaviour.py`. Each step becomes a small, clearly named function, and each scenario becomes a test that reads like the scenario:
+
+```python
+"""Scenarios from features/booking.feature, written as Given / When / Then."""
+
+from conftest import login, make_user
+
+from app.models import Booking, User
+
+
+def given_places_already_booked(client, event, places):
+    login(client, "bob")
+    client.post(f"/events/{event.id}/book", data={"party_size": str(places)})
+
+
+def when_user_books(client, event, username, places):
+    make_user(username)
+    login(client, username)
+    client.post(f"/events/{event.id}/book", data={"party_size": str(places)})
+
+
+def places_booked(event):
+    return sum(b.party_size for b in Booking.query.filter_by(event_id=event.id))
+
+
+def bookings_for(username):
+    user = User.query.filter_by(username=username).one()
+    return Booking.query.filter_by(user_id=user.id).all()
+
+
+def test_booking_the_last_remaining_places(client, alice, bob, event):
+    # Given an event with 5 places
+    assert event.capacity == 5
+    # And 4 places are already booked
+    given_places_already_booked(client, event, 4)
+    # When carol books 1 place
+    when_user_books(client, event, "carol", 1)
+    # Then the event is fully booked
+    assert places_booked(event) == event.capacity
+    # And carol has a booking for 1 place
+    assert [b.party_size for b in bookings_for("carol")] == [1]
+
+
+def test_trying_to_book_more_places_than_remain(client, alice, bob, event):
+    # Given an event with 5 places
+    assert event.capacity == 5
+    # And 4 places are already booked
+    given_places_already_booked(client, event, 4)
+    # When carol tries to book 2 places
+    when_user_books(client, event, "carol", 2)
+    # Then her booking is rejected
+    assert bookings_for("carol") == []
+    # And 4 places are still booked
+    assert places_booked(event) == 4
+```
+
+Run it:
+
+```bash
+uv run pytest tests/test_booking_behaviour.py -v
+```
+
+If you have already merged your overbooking fix, both scenarios pass. To see the second scenario catch the defect, temporarily put `+ 1` back into the capacity check in `app/bookings.py`, run the tests again, then undo the change with `git checkout -- app/bookings.py`.
+
+### 3. How this is done in industry
+
+Here the scenarios and the tests are kept in step by hand. Tools such as **pytest-bdd** and **behave** run the `.feature` file directly, matching each Given / When / Then line to a Python function, so a scenario cannot be changed without its test changing too. We have not added one to this repository, to keep the dependencies (and the Lab 4 audit) unchanged, but the structure is exactly the same.
+
+### Apply it to Assignment 1
+
+BDD is one of the testing approaches you may use in Assignment 1. If you do, write scenarios for one or two of your feature's requirements, implement them as tests, and explain in your video what the scenarios add: tests that someone outside the team can read and agree with.
