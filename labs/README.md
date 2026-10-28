@@ -10,7 +10,7 @@ The Ada Events site in this repository has one new feature, **bookings**, drafte
 
 | Lab | Topic | Time | Assignment 1 criterion |
 |---|---|---|---|
-| [0](00-setup.md) | Set up and explore | 30 min | All |
+| [0](00-setup.md) | Set up and explore | 20 min | All |
 | [1](01-inspection-and-defect-reporting.md) | Code inspection and defect reporting | 75 min | Inspection, Completion and Defect Resolution |
 | [2](02-testing-and-regression-tests.md) | Testing and regression tests | 75 min | Testing |
 | [3](03-test-effectiveness.md) | Coverage, mutation testing and testable design | 90 min | Testing; Code Quality |

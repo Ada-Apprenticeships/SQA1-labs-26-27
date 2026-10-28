@@ -1,7 +1,7 @@
 # Lab 0: Set up and explore
 
 **Aim:** get the repository running, understand what is in it, and learn to read its history.
-**Time:** about 30 minutes.
+**Time:** about 20 minutes.
 
 ## 1. Open a codespace
 
