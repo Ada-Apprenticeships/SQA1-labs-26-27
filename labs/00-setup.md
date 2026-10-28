@@ -33,12 +33,19 @@ Stop the app with `Ctrl+C` when you are done.
 The commit history tells you what changed and who changed it. Inherited code always deserves this step.
 
 ```bash
-git log --oneline
-git show --stat HEAD
-git show HEAD -- app/bookings.py
+git log --oneline --author="Jordan Lee"
 ```
 
-`git show --stat HEAD` lists every file the bookings draft touched. Make a note of them: they are the scope of your inspection in Lab 1.
+This lists the commits by Jordan Lee, the colleague who wrote the bookings draft with an AI assistant. Copy the short ID at the start of the line (seven characters, such as `4d1b70f`; yours will differ). Then, replacing `<id>` with it:
+
+```bash
+git show --stat <id>
+git show <id> -- app/bookings.py
+```
+
+`git show --stat` lists every file the bookings draft touched. Make a note of them: they are the scope of your inspection in Lab 1. If the output fills the screen, use the arrow keys to scroll and press `q` to return to the prompt.
+
+Notice that the draft is not the latest commit: later commits added these labs and updated a dependency. Always find the commit you care about rather than assuming it is `HEAD`.
 
 ## 5. Tidy up
 
