@@ -49,7 +49,7 @@ Notice that the draft is not the latest commit: later commits added these labs a
 
 ## 5. Tidy up
 
-Close the app's browser tab and press Ctrl+C in the terminal to stop the server. When you finish for the day, stop your codespace from **Code → Codespaces → ⋯ → Stop codespace** to save your free hours.
+Close the app's browser tab and press Ctrl+C in the terminal to stop the server. When you finish for the day, stop your codespace from **Code → Codespaces → ⋯ → Stop codespace** to save Codespaces hours.
 
 ## Apply it to Assignment 1
 
