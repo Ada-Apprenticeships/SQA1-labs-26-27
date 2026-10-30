@@ -20,7 +20,9 @@ The bookings feature was meant to meet these requirements. Inspection compares w
 
 ## 1. Create a defect report template
 
-Good defect reports are consistent. Create the file `.github/ISSUE_TEMPLATE/defect.md`:
+Good defect reports are consistent. To see what a strong report looks like next to a weak one, open the [defect report exemplar](https://staticwebsitesjr.z33.web.core.windows.net/sqa1/defect-report-exemplar.html).
+
+Create the file `.github/ISSUE_TEMPLATE/defect.md`:
 
 ```markdown
 ---
@@ -40,12 +42,14 @@ labels: defect
 
 **Severity** (Critical / High / Medium / Low):
 
-**ISO/IEC 25010 characteristic** (e.g. functional correctness, security, reliability, usability, maintainability):
+**ISO/IEC 25010 characteristic** (for example, functional correctness, security, reliability, interaction capability, maintainability):
 
 **Requirement affected:**
 
 **Evidence** (screenshot, failing test, log):
 ```
+
+The file is not a report in itself. Once it is pushed, GitHub reads it and adds a **Defect report** option to the **New issue** button. Choosing it opens a new issue with these headings already filled in and the `defect` label applied, so every report you write has the same structure.
 
 Commit and push it:
 
@@ -89,14 +93,34 @@ That `+ 1` looks wrong. To confirm it, log in as `bob` and open **CI Pipelines Q
 
 Open **Issues → New issue → Defect report** and fill it in. For the worked example:
 
-> **Summary:** Bookings can exceed event capacity by one place
-> **Steps to reproduce:** 1. Log in as bob. 2. Open "CI Pipelines Q&A" (capacity 4). 3. Book 4 places. 4. Book 1 more place.
-> **Expected result:** The second booking is rejected with "not enough places left".
-> **Actual result:** The booking is accepted; 5 places are booked for an event of 4.
+**Title:** Bookings can exceed event capacity by one place
+
+> **Summary**
+>
+> A user can book one more place than an event has left, so events can be overbooked.
+>
+> **Steps to reproduce**
+>
+> 1. Log in as `bob`.
+> 2. Open "CI Pipelines Q&A" (capacity 4).
+> 3. Book 4 places.
+> 4. Book 1 more place.
+>
+> **Expected result**
+>
+> The second booking is rejected with "not enough places left".
+>
+> **Actual result**
+>
+> The booking is accepted; 5 places are booked for an event of 4.
+>
 > **Severity:** High
+>
 > **ISO/IEC 25010 characteristic:** Functional suitability (functional correctness)
+>
 > **Requirement affected:** R2
-> **Evidence:** `book()` in app/bookings.py checks `party_size > remaining + 1`.
+>
+> **Evidence:** `book()` in `app/bookings.py` checks `party_size > remaining + 1`.
 
 You can also create issues from the terminal: `gh issue create`.
 
@@ -121,7 +145,7 @@ You should have a defect template in the repository and at least five well-writt
 
 ## Apply it to Assignment 1
 
-Write down the requirements your assignment feature was meant to meet (Appendix A of the brief), then run the same checklist over your draft. Log every confirmed defect as an issue using the same template.
+Write down the requirements your assignment feature was meant to meet (Appendix A of the brief), then run the same checklist over your draft. Add the same `.github/ISSUE_TEMPLATE/defect.md` file to your Assignment 1 repository first, then log every confirmed defect as an issue using it.
 
 ## Stretch
 
