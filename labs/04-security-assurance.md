@@ -148,3 +148,40 @@ Run Bandit and pip-audit on your assignment repository and triage every finding:
 ## Stretch
 
 Read the OWASP Top 10:2025 entries for [A01 Broken Access Control](https://owasp.org/Top10/2025/A01_2025-Broken_Access_Control/) and [A05 Injection](https://owasp.org/Top10/2025/A05_2025-Injection/), and add the relevant category to your issue reports (for example, "A01:2025 Broken Access Control").
+
+## Extension: Dependabot (optional, about 15 minutes)
+
+pip-audit only checks your dependencies when you run it. **Dependabot**, built into GitHub, watches them all the time.
+
+### 1. Turn on alerts and security updates
+
+On GitHub, open your labs repository and go to **Settings → Advanced Security**. Under **Dependabot**, click **Enable** for **Dependabot alerts** and **Dependabot security updates**.
+
+- **Alerts** appear under the **Security** tab when a dependency has a published vulnerability.
+- **Security updates** are pull requests that Dependabot opens to upgrade a vulnerable package for you.
+
+### 2. Keep everything up to date
+
+Create `.github/dependabot.yml`:
+
+```yaml
+version: 2
+updates:
+  - package-ecosystem: "uv"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+```
+
+Commit and push it. Dependabot reads `uv.lock` and opens a pull request for each package with a newer version. These are **version updates**: not every one fixes a vulnerability, but staying current makes the security fixes easier to take when they come.
+
+Look at the **Insights → Dependency graph → Dependabot** page to check it ran, then look at any pull requests it has opened.
+
+### 3. Think about it
+
+- Should you merge a Dependabot pull request straight away? What could an upgrade break, and what tells you it did not? (After Thursday's lab, your CI pipeline runs the tests on every one.)
+- Name one thing Dependabot cannot find that your Lab 4 security tests can.
+
+### Apply it to Assignment 1
+
+Turn on Dependabot alerts in your assignment repository too. Triage anything it reports the same way as a pip-audit finding, and mention it in your video if it is part of how you keep your feature secure.
