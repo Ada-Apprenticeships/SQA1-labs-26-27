@@ -147,4 +147,4 @@ Run Bandit and pip-audit on your assignment repository and triage every finding:
 
 ## Stretch
 
-Read the OWASP Top 10 entries for [Broken Access Control](https://owasp.org/Top10/A01_2021-Broken_Access_Control/) and [Injection](https://owasp.org/Top10/A03_2021-Injection/), and add the relevant category to your issue reports.
+Read the OWASP Top 10:2025 entries for [A01 Broken Access Control](https://owasp.org/Top10/2025/A01_2025-Broken_Access_Control/) and [A05 Injection](https://owasp.org/Top10/2025/A05_2025-Injection/), and add the relevant category to your issue reports (for example, "A01:2025 Broken Access Control").
