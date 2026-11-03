@@ -99,6 +99,6 @@ Every pull request is checked automatically by lint, formatting, tests with a co
 
 Set up the same gate on your assignment repository **early**, so that every fix you make afterwards is checked by it. Choose your coverage threshold honestly: set it just below what you have achieved, so it protects against going backwards.
 
-## Stretch
+## Stretch (optional)
 
 Add a step that uploads the coverage report as an artifact (`actions/upload-artifact`), or a job that runs mutation testing on pull requests that change `app/booking_rules.py`.
