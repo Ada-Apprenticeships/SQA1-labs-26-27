@@ -73,21 +73,6 @@ Imagine the product owner asks: **"Can we release bookings on Monday?"** Using y
 
 There is no single right answer. A justified "do not release yet" can be stronger than an unjustified "yes".
 
-## 5. Plan your video
-
-Assignment 1 asks for a 15-minute video. Using this lab repository as practice, sketch a running order with a rough timing for each part:
-
-| Section | What you would show | Time |
-|---|---|---|
-| Inspection, completion and defect resolution | Your checklist, two or three issues, the feature working | 3 to 4 min |
-| Testing | A failing test before a fix, coverage, mutation results | 4 min |
-| Security | One flaw demonstrated and fixed, Bandit and pip-audit | 2 to 3 min |
-| Code quality and measurement | Before-and-after table, one refactoring | 2 min |
-| CI/CD and Git | The gate blocking a pull request, issue-to-PR traceability | 2 min |
-| Release recommendation | Your decision and why | 1 to 2 min |
-
-Practise explaining **why**, not just what: the brief rewards reasoning about your evidence.
-
 ## Checkpoint
 
 You have measured AI-generated tests against your own, a pull request template with an AI section, and a written release recommendation backed by evidence.
