@@ -92,7 +92,9 @@ git push -u origin fix/overbooking
 
 Open a pull request from `fix/overbooking` to `main` (GitHub shows a prompt after you push, or run `gh pr create`). In the description, say what changed and how you tested it, and include `Fixes #1`. Merge it, and the issue closes automatically.
 
-## 6. Your turn
+## 6. Your turn (optional)
+
+If time is short, skip this section and apply the same cycle to a defect in your Assignment 1 feature instead.
 
 Pick **two** of your Lab 1 issues, for example R3 (one booking per user per event) and R4 (no booking for events that have started). For each, repeat the cycle:
 
@@ -105,7 +107,7 @@ Think about the test data each needs. For R4 you will need an event in the past:
 
 ## Checkpoint
 
-You should have three merged pull requests, each with a test commit followed by a fix commit, and three closed issues.
+You should have at least one merged pull request (three if you did Your turn), each with a test commit followed by a fix commit, and its issue closed.
 
 ## Apply it to Assignment 1
 
