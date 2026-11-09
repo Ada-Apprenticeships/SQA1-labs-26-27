@@ -44,26 +44,56 @@ def test_bookings_filter_is_not_vulnerable_to_sql_injection(client, alice, bob, 
     assert b"Pytest Workshop" not in response.data
 ```
 
-Run `uv run pytest tests/test_booking_security.py`. It **fails**: carol can see bob's booking. The injected `OR 1=1` overrides the check on `user_id`, so the vulnerability is confirmed and it leaks other people's data. Commit the failing test.
+Run `uv run pytest tests/test_booking_security.py`. It **fails**: carol can see bob's booking. The injected `OR 1=1` overrides the check on `user_id`, so the vulnerability is confirmed and it leaks other people's data.
+
+The test describes the **secure** behaviour, so it fails now and will pass once the code is fixed. That is the same test-first pattern as Lab 2.
+
+Commit the failing test on its own, before you change any app code, so your history shows the vulnerability was proved before it was fixed:
+
+```bash
+git add tests/test_booking_security.py
+git commit -m "Add failing test for SQL injection in bookings filter (#N)"
+```
+
+Replace `N` with the number of the issue for this defect. If you did not log one in Lab 1, create it now (**Issues → New issue → Defect report**), with severity **High** and the ISO/IEC 25010 characteristic **Security**, then use its number.
 
 ## 3. Fix it
 
-Never build SQL from user input. Use the ORM, which sends values separately from the query. Replace the body of `mine()` up to the `return` with:
+Never build SQL from user input. Use the ORM, which sends values separately from the query.
+
+In `app/bookings.py`:
+
+1. Replace the **whole** `mine()` function, from `@bp.route("/bookings")` down to its `return`, with this version:
 
 ```python
+@bp.route("/bookings")
+@login_required
+def mine():
     q = request.args.get("q", "")
     bookings = db.session.scalars(
         db.select(Booking).join(Event)
         .where(Booking.user_id == g.user.id)
         .where(Event.title.contains(q, autoescape=True))
     ).all()
+    return render_template("my_bookings.html", bookings=bookings, q=q)
 ```
 
-`autoescape=True` stops `%` and `_` in the filter acting as wildcards. Remove `from sqlalchemy import text`, which is no longer used. Run the tests and Bandit again: both should now be clean. Commit.
+2. Delete the line `from sqlalchemy import text` near the top. Nothing uses it now.
+
+The old version pasted `q` into the SQL text. This one passes it to the database as a value, so whatever the user types is only ever treated as text to search for, never as part of the query. `autoescape=True` stops `%` and `_` in the filter acting as wildcards.
+
+Run the tests and Bandit again: both should now be clean. Commit the fix, using the same issue number:
+
+```bash
+git add app/bookings.py
+git commit -m "Use the ORM for the bookings filter (fixes #N)"
+```
 
 ## 4. Prove and fix broken authorisation
 
-Add this test to `tests/test_booking_security.py`:
+Requirement R5 says users can cancel **their own** bookings only, but `cancel()` deletes whichever booking id it is given.
+
+**Prove it.** Add this test to the end of `tests/test_booking_security.py`. Bob makes a booking, the test looks up its id, then carol tries to cancel it. The test expects a **403 Forbidden** response, and bob's booking still to be there:
 
 ```python
 def test_user_cannot_cancel_someone_elses_booking(client, alice, bob, event):
@@ -79,15 +109,46 @@ def test_user_cannot_cancel_someone_elses_booking(client, alice, bob, event):
     assert Booking.query.count() == 1
 ```
 
-It fails: carol can cancel bob's booking just by knowing its number. This kind of flaw is called an **insecure direct object reference**. Commit the failing test, then fix `cancel()` by checking ownership straight after loading the booking:
+Run `uv run pytest tests/test_booking_security.py`. The new test **fails**: carol can cancel bob's booking just by knowing its number. This kind of flaw is called an **insecure direct object reference**.
+
+Commit the failing test on its own, as before:
+
+```bash
+git add tests/test_booking_security.py
+git commit -m "Add failing test for cancelling another user's booking (#N)"
+```
+
+Replace `N` with the number of the issue for this defect. You may not have logged one in Lab 1, because it is hard to see from the browser: if not, create it now, with severity **High**, characteristic **Security** and requirement **R5**.
+
+**Fix it.** In `app/bookings.py`:
+
+1. Add `abort` to the Flask import at the top, so it reads:
 
 ```python
+from flask import Blueprint, abort, flash, g, redirect, render_template, request, url_for
+```
+
+2. Replace the **whole** `cancel()` function, from `@bp.route("/bookings/<int:booking_id>/cancel", ...)` down to its `return`, with this version. The only change is the two lines that check who owns the booking:
+
+```python
+@bp.route("/bookings/<int:booking_id>/cancel", methods=["POST"])
+@login_required
+def cancel(booking_id):
     booking = db.get_or_404(Booking, booking_id)
     if booking.user_id != g.user.id:
         abort(403)
+    db.session.delete(booking)
+    db.session.commit()
+    flash("Booking cancelled.")
+    return redirect(url_for("bookings.mine"))
 ```
 
-Add `abort` to the `from flask import ...` line. Run the tests and commit the fix.
+Run `uv run pytest`: every test should now pass. Commit the fix:
+
+```bash
+git add app/bookings.py
+git commit -m "Only let users cancel their own bookings (fixes #N)"
+```
 
 Notice that **Bandit did not report this flaw**. Scanners find patterns in code; they cannot know your authorisation rules.
 
@@ -127,7 +188,19 @@ uv sync
 uv run pip-audit
 ```
 
-pip-audit should now report no known vulnerabilities. Commit `pyproject.toml`, `uv.lock` and `requirements.txt`.
+pip-audit should now report **No known vulnerabilities found**. If it still lists urllib3, check you ran `uv sync` after the upgrade.
+
+Then commit the dependency changes:
+
+1. Run `git status`. You should see changes to `pyproject.toml` (urllib3 removed, Bandit and pip-audit added), `uv.lock` (the locked versions) and `requirements.txt`. Your test and app changes should already be committed from sections 2 to 4.
+2. Commit the three files together, so the change to the dependencies is one step in your history:
+
+```bash
+git add pyproject.toml uv.lock requirements.txt
+git commit -m "Remove unused urllib3 and upgrade the transitive copy; add security tools"
+```
+
+If you logged an issue for the vulnerable dependency, add `(fixes #N)` to the message.
 
 ## 6. Your turn
 
@@ -136,6 +209,8 @@ There is a **cross-site scripting (XSS)** flaw in this feature that Bandit canno
 1. write a test that books with a note containing `<script>alert(1)</script>` and checks that the organiser's view of the event page does **not** contain it unescaped;
 2. watch it fail, then fix the template;
 3. open a pull request for all your security work and merge it.
+
+Stuck, or short of time? The [Lab 4 hints and tips](https://staticwebsitesjr.z33.web.core.windows.net/sqa1/sqa1-lab4-hints.html) take you through it one hint at a time.
 
 ## Checkpoint
 
