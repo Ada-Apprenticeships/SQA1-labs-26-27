@@ -3,7 +3,7 @@
 Draft generated with an AI coding assistant.
 """
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for
-from sqlalchemy import text
+
 
 from .auth import login_required
 from .extensions import db
@@ -44,12 +44,11 @@ def book(event_id):
 @login_required
 def mine():
     q = request.args.get("q", "")
-    sql = (
-        "SELECT booking.id FROM booking JOIN event ON event.id = booking.event_id "
-        f"WHERE booking.user_id = {g.user.id} AND event.title LIKE '%{q}%'"
-    )
-    ids = [row[0] for row in db.session.execute(text(sql))]
-    bookings = Booking.query.filter(Booking.id.in_(ids)).all()
+    bookings = db.session.scalars(
+        db.select(Booking).join(Event)
+        .where(Booking.user_id == g.user.id)
+        .where(Event.title.contains(q, autoescape=True))
+    ).all()
     return render_template("my_bookings.html", bookings=bookings, q=q)
 
 
