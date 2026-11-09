@@ -12,7 +12,9 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "mutmut>=3.8.1",
     "pytest==9.1.1",
+    "pytest-cov>=7.1.0",
 ]
 
 [tool.uv]
@@ -21,3 +23,9 @@ package = false
 [tool.pytest.ini_options]
 pythonpath = [".", "tests"]
 testpaths = ["tests"]
+
+
+[tool.mutmut]
+source_paths = ["app/"]
+only_mutate = ["app/booking_rules.py"]
+pytest_add_cli_args_test_selection = ["tests/test_booking_rules.py"]

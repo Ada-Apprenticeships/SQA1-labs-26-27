@@ -8,32 +8,31 @@ from sqlalchemy import text
 from .auth import login_required
 from .extensions import db
 from .models import Booking, Event
+from .booking_rules import booking_error
 
 bp = Blueprint("bookings", __name__)
 
-MAX_PARTY = 4
+
 
 
 @bp.route("/events/<int:event_id>/book", methods=["POST"])
 @login_required
 def book(event_id):
     event = db.get_or_404(Event, event_id)
-    party_size = int(request.form.get("party_size", 1))
+
+    party_size = request.form.get("party_size", type=int)
     note = request.form.get("note", "")
 
-    if party_size > MAX_PARTY:
-        flash(f"You can book at most {MAX_PARTY} places.")
+    if party_size is None:
+        error = "Please enter a number of places."
+    else:
+        error = booking_error(event.capacity,
+                              [b.party_size for b in event.bookings], party_size)
+    if error:
+        flash(error)
         return redirect(url_for("events.view", event_id=event_id))
 
-    # Work out how many places are left
-    booked = 0
-    for b in event.bookings:
-        booked += b.party_size
-    remaining = event.capacity - booked
-    if party_size > remaining:
-        flash("Sorry, there are not enough places left.")
-        return redirect(url_for("events.view", event_id=event_id))
-
+    
     booking = Booking(event=event, user=g.user, party_size=party_size, note=note)
     db.session.add(booking)
     db.session.commit()
