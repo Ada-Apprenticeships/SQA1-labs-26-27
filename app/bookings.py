@@ -2,7 +2,7 @@
 
 Draft generated with an AI coding assistant.
 """
-from flask import Blueprint, flash, g, redirect, render_template, request, url_for
+from flask import Blueprint, abort, flash, g, redirect, render_template, request, url_for
 
 
 from .auth import login_required
@@ -55,8 +55,10 @@ def mine():
 @bp.route("/bookings/<int:booking_id>/cancel", methods=["POST"])
 @login_required
 def cancel(booking_id):
-    booking = db.get_or_404(Booking, booking_id)
-    db.session.delete(booking)
-    db.session.commit()
-    flash("Booking cancelled.")
-    return redirect(url_for("bookings.mine"))
+     booking = db.get_or_404(Booking, booking_id)
+     if booking.user_id != g.user.id:
+        abort(403)
+     db.session.delete(booking)
+     db.session.commit()
+     flash("Booking cancelled.")
+     return redirect(url_for("bookings.mine"))
