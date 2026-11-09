@@ -52,9 +52,13 @@ def booking_error(capacity, party_sizes, party_size, max_party=MAX_PARTY):
 Now use it in `app/bookings.py`:
 
 1. Add `from .booking_rules import booking_error` to the imports, and delete the line `MAX_PARTY = 4`.
-2. In `book()`, replace everything from `party_size = int(...)` down to the end of the capacity check (the `return redirect(...)` straight after "not enough places left") with:
+2. Replace the **whole** `book()` function, from `@bp.route(...)` down to its final `return`, with this version:
 
 ```python
+@bp.route("/events/<int:event_id>/book", methods=["POST"])
+@login_required
+def book(event_id):
+    event = db.get_or_404(Event, event_id)
     party_size = request.form.get("party_size", type=int)
     note = request.form.get("note", "")
 
@@ -66,9 +70,17 @@ Now use it in `app/bookings.py`:
     if error:
         flash(error)
         return redirect(url_for("events.view", event_id=event_id))
+
+    # Any checks you added for R3 or R4 in Lab 2 go here
+
+    booking = Booking(event=event, user=g.user, party_size=party_size, note=note)
+    db.session.add(booking)
+    db.session.commit()
+    flash("Booked! See you there.")
+    return redirect(url_for("bookings.mine"))
 ```
 
-Any checks you added for R3 or R4 in Lab 2 should come after this block, before `booking = Booking(...)`. Leave them where they are.
+If you added checks for R3 or R4 in Lab 2, copy them from your old version into the marked place before you delete it.
 
 `type=int` returns `None` instead of crashing when the input is not a number, and `booking_error` now rejects zero and negative party sizes. Run `uv run pytest` to check nothing broke.
 
@@ -81,16 +93,21 @@ from app.booking_rules import booking_error, places_remaining
 
 
 def test_places_remaining():
+    # Capacity 10, with bookings of 2 and 3 places: 5 should be left
     assert places_remaining(10, [2, 3]) == 5
 
 
 def test_valid_booking_has_no_error():
+    # Capacity 10, no bookings yet: booking 2 places should be allowed (no error)
     assert booking_error(10, [], 2) is None
 
 
 def test_full_event_is_rejected():
+    # Capacity 5, already full with one booking of 5: booking 1 more should be rejected
     assert booking_error(5, [5], 1) is not None
 ```
+
+Each call passes the event's capacity, a list of the party sizes already booked, and (for `booking_error`) the party size being requested. `booking_error` returns `None` if the booking is allowed, or an error message if not.
 
 They pass, and they cover most of `booking_rules.py`. Are they good enough?
 
@@ -132,17 +149,46 @@ def test_party_size_of_one_is_allowed():
     assert booking_error(10, [], 1) is None
 ```
 
-Run `uv run mutmut run` again and check that mutant is now killed.
+mutmut saves its results in the `mutants/` folder and only retests a mutant when the app code changes, not when your tests do. So delete the folder before each new run:
+
+```bash
+rm -rf mutants
+uv run mutmut run
+uv run mutmut results
+```
+
+Mutant 1 is no longer listed: your new test killed it.
 
 ## 6. Your turn
 
-Add tests until **every mutant is killed**. Use `mutmut results` and `mutmut show` to see what each survivor changed, then ask what test would notice. Hints:
+Add tests until **every mutant is killed**. Use `mutmut results` and `mutmut show` to see what each survivor changed, then ask what test would notice. Remember `rm -rf mutants` before each `uv run mutmut run`. Stuck? Try the [Lab 3 hint sheet](https://staticwebsitesjr.z33.web.core.windows.net/sqa1/sqa1-lab3-hints.html), one hint at a time. Hints:
 
 - test both sides of every boundary (zero and one; the maximum and one above; exactly full and one over);
 - check the **exact** error message, not just `is not None`;
 - test `max_party` with a value other than the default.
 
-Then commit your work, open a pull request and merge it. Add the `mutants/` folder to `.gitignore` first: it is generated output.
+When there are no survivors, commit your work and merge it:
+
+1. Run `uv run pytest` to check every test passes.
+2. Add the `mutants/` folder to `.gitignore`. It is generated output, so it should not be committed:
+
+   ```bash
+   echo "mutants/" >> .gitignore
+   ```
+
+3. Run `git status`. You should see changes to `.gitignore`, `pyproject.toml`, `uv.lock` and `app/bookings.py`, and the new files `app/booking_rules.py` and `tests/test_booking_rules.py`. If `mutants/` is listed, check step 2.
+4. Commit in two steps, so your history shows the refactoring separately from the tests:
+
+   ```bash
+   git add app/booking_rules.py app/bookings.py
+   git commit -m "Extract booking rules into plain functions"
+   git add .gitignore pyproject.toml uv.lock tests/test_booking_rules.py
+   git commit -m "Add mutation testing and tests that kill every mutant"
+   ```
+
+5. Push the branch: `git push -u origin test/effectiveness`
+6. Open a pull request from `test/effectiveness` to `main` (GitHub shows a prompt after you push, or run `gh pr create`). In the description, say what you changed and give your mutation score before and after, for example "6 of 16 mutants killed before, 16 of 16 after". There is no issue to close this time.
+7. Merge the pull request, then update your local copy: `git switch main && git pull`
 
 ## Checkpoint
 
