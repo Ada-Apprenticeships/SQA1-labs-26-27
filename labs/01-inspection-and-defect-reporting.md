@@ -20,6 +20,8 @@ The bookings feature was meant to meet these requirements. Inspection compares w
 
 ## 1. Create a defect report template
 
+First, check your repository on GitHub has an **Issues** tab next to **Code**. If not, go to **Settings → General → Features** and tick **Issues**. Do the same in your Assignment 1 repository.
+
 Good defect reports are consistent. To see what a strong report looks like next to a weak one, open the [defect report exemplar](https://staticwebsitesjr.z33.web.core.windows.net/sqa1/defect-report-exemplar.html).
 
 Create the file `.github/ISSUE_TEMPLATE/defect.md`:
@@ -126,14 +128,16 @@ You can also create issues from the terminal: `gh issue create`.
 
 ## 5. Your turn
 
-Find and report **at least four more** defects using the checklist. Between them, try to cover:
+Find and report **at least four more** defects using the checklist. Report each one as a new issue in the same way: **Issues → New issue → Defect report**. You only ever need the one `defect.md` template; it is reused for every issue.
+
+Between them, try to cover:
 
 - one missing or incomplete requirement;
 - one input that can crash the app (a 500 error);
 - one problem with who is allowed to do what;
 - one inconsistency between two parts of the feature.
 
-There are more than four to find.
+There are more than four to find. Stuck? Try the [Lab 1 hint sheet](https://staticwebsitesjr.z33.web.core.windows.net/sqa1/sqa1-lab1-hints.html), one hint at a time.
 
 ## 6. Prioritise
 
