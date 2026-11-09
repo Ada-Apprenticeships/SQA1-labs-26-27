@@ -202,13 +202,15 @@ git commit -m "Remove unused urllib3 and upgrade the transitive copy; add securi
 
 If you logged an issue for the vulnerable dependency, add `(fixes #N)` to the message.
 
+You do not need to push yet. You will push everything once, at the end of section 6, and open a single pull request for all your security work.
+
 ## 6. Your turn
 
 There is a **cross-site scripting (XSS)** flaw in this feature that Bandit cannot see, because it is in a template rather than in Python. Find it (look at your Lab 1 notes, and search the templates for `|safe`), then:
 
 1. write a test that books with a note containing `<script>alert(1)</script>` and checks that the organiser's view of the event page does **not** contain it unescaped;
 2. watch it fail, then fix the template;
-3. open a pull request for all your security work and merge it.
+3. push your branch (`git push -u origin fix/security`), open a pull request for all your security work and merge it.
 
 Stuck, or short of time? The [Lab 4 hints and tips](https://staticwebsitesjr.z33.web.core.windows.net/sqa1/sqa1-lab4-hints.html) take you through it one hint at a time.
 
