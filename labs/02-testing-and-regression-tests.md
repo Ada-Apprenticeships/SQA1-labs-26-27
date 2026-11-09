@@ -24,12 +24,14 @@ Also look at `tests/conftest.py`. The fixtures there give you an app with an emp
 
 ## 3. Write a failing boundary test (worked example)
 
-Defects cluster at boundaries, so test either side of the limit. Add this to the end of `tests/test_bookings.py`:
+Defects cluster at boundaries, so test either side of the limit. The event holds 5. In this test, Bob books 4 places first, leaving 1. Then Carol tries to book, and the test checks whether her booking is accepted or rejected. It runs twice: once with Carol booking 1 place (just fits) and once with 2 (one too many).
+
+Add this to the end of `tests/test_bookings.py`:
 
 ```python
 @pytest.mark.parametrize("second_party, expected_total", [
-    (1, 5),  # exactly fills the event: allowed
-    (2, 4),  # one place too many: must be rejected
+    (1, 5),  # carol books 1: 4 + 1 = 5 fills the event, so allowed
+    (2, 4),  # carol books 2: 4 + 2 = 6 is too many, so rejected; total stays at 4
 ])
 def test_bookings_cannot_exceed_capacity(client, alice, bob, event, second_party, expected_total):
     # event fixture has capacity 5: bob takes 4 places, then carol tries to book
@@ -40,6 +42,8 @@ def test_bookings_cannot_exceed_capacity(client, alice, bob, event, second_party
     client.post(f"/events/{event.id}/book", data={"party_size": str(second_party)})
     assert sum(b.party_size for b in Booking.query.all()) == expected_total
 ```
+
+Each pair is (places Carol tries to book, total places booked afterwards). The `assert` checks that total.
 
 At the top of the file, add `import pytest` and change the conftest import to `from conftest import login, make_user`.
 
