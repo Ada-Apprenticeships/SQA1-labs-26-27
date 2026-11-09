@@ -30,7 +30,7 @@ def book(event_id):
     for b in event.bookings:
         booked += b.party_size
     remaining = event.capacity - booked
-    if party_size > remaining + 1:
+    if party_size > remaining:
         flash("Sorry, there are not enough places left.")
         return redirect(url_for("events.view", event_id=event_id))
 
