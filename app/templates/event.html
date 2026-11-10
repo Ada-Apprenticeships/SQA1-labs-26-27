@@ -5,7 +5,7 @@
     <h1>{{ event.title }}</h1>
     <p class="meta">{{ event.starts_at.strftime('%d %b %Y, %H:%M') }} · {{ event.location }} · organised by {{ event.organiser.username }}</p>
     <p>{{ event.description }}</p>
-    <p class="meta">Places left: {{ event.capacity - event.bookings|length }} of {{ event.capacity }}</p>
+    <p class="meta">Places left: {{ event.places_left }} of {{ event.capacity }}</p>
   </article>
   {% if g.user %}
     <h2>Book places</h2>

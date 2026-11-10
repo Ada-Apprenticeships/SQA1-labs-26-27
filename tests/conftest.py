@@ -9,11 +9,13 @@ from app.models import Event, User, utcnow
 
 @pytest.fixture
 def app():
-    app = create_app({
-        "TESTING": True,
-        "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
-        "WTF_CSRF_ENABLED": False,
-    })
+    app = create_app(
+        {
+            "TESTING": True,
+            "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
+            "WTF_CSRF_ENABLED": False,
+        }
+    )
     with app.app_context():
         db.create_all()
         yield app
@@ -46,8 +48,14 @@ def bob(app):
 
 @pytest.fixture
 def event(alice):
-    e = Event(title="Pytest Workshop", description="Testing Flask apps", location="Room 1",
-              starts_at=utcnow() + timedelta(days=7), capacity=5, organiser=alice)
+    e = Event(
+        title="Pytest Workshop",
+        description="Testing Flask apps",
+        location="Room 1",
+        starts_at=utcnow() + timedelta(days=7),
+        capacity=5,
+        organiser=alice,
+    )
     db.session.add(e)
     db.session.commit()
     return e

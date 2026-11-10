@@ -1,4 +1,5 @@
 """Command-line helpers: flask --app run init-db / seed."""
+
 from datetime import timedelta
 
 import click
@@ -34,8 +35,15 @@ def register_cli(app):
             ("Last Month's Retro", "This event has already happened.", "Room 1", -30, 10),
         ]
         for title, desc, location, days, capacity in samples:
-            db.session.add(Event(title=title, description=desc, location=location,
-                                 starts_at=now + timedelta(days=days),
-                                 capacity=capacity, organiser=users["alice"]))
+            db.session.add(
+                Event(
+                    title=title,
+                    description=desc,
+                    location=location,
+                    starts_at=now + timedelta(days=days),
+                    capacity=capacity,
+                    organiser=users["alice"],
+                )
+            )
         db.session.commit()
         click.echo("Seeded 3 users (alice, bob, carol; password: password123) and 6 events.")

@@ -1,8 +1,8 @@
 """Registration, login and logout."""
+
 import functools
 
-from flask import (Blueprint, flash, g, redirect, render_template, request,
-                   session, url_for)
+from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
 
 from .extensions import db
 from .models import User
@@ -18,11 +18,13 @@ def load_logged_in_user():
 
 def login_required(view):
     """Redirect anonymous users to the login page."""
+
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
             return redirect(url_for("auth.login"))
         return view(**kwargs)
+
     return wrapped_view
 
 
