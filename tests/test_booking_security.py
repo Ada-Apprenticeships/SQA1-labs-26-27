@@ -1,5 +1,6 @@
-from app.models import Booking
 from conftest import login, make_user
+
+from app.models import Booking
 
 
 def test_bookings_filter_is_not_vulnerable_to_sql_injection(client, alice, bob, event):

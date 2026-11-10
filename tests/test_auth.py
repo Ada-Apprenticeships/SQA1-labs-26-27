@@ -1,5 +1,6 @@
-from app.models import User
 from conftest import login
+
+from app.models import User
 
 
 def test_register_creates_user(client, app):
@@ -9,14 +10,16 @@ def test_register_creates_user(client, app):
 
 
 def test_register_rejects_short_password(client):
-    response = client.post("/auth/register", data={"username": "dave", "password": "short"},
-                           follow_redirects=True)
+    response = client.post(
+        "/auth/register", data={"username": "dave", "password": "short"}, follow_redirects=True
+    )
     assert b"at least 8 characters" in response.data
 
 
 def test_login_with_wrong_password_fails(client, alice):
-    response = client.post("/auth/login", data={"username": "alice", "password": "wrong"},
-                           follow_redirects=True)
+    response = client.post(
+        "/auth/login", data={"username": "alice", "password": "wrong"}, follow_redirects=True
+    )
     assert b"Incorrect username or password" in response.data
 
 

@@ -1,4 +1,5 @@
 """Database models."""
+
 from datetime import datetime, timezone
 
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -32,8 +33,13 @@ class Event(db.Model):
     capacity = db.Column(db.Integer, nullable=False)
     organiser_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     organiser = db.relationship("User")
-    bookings = db.relationship("Booking", back_populates="event",
-                               cascade="all, delete-orphan")
+    bookings = db.relationship("Booking", back_populates="event", cascade="all, delete-orphan")
+
+    @property
+    def places_left(self):
+        from .booking_rules import places_remaining
+
+        return places_remaining(self.capacity, [b.party_size for b in self.bookings])
 
 
 class Booking(db.Model):

@@ -1,4 +1,5 @@
 """Events application factory."""
+
 from flask import Flask
 
 from .extensions import csrf, db
@@ -15,11 +16,13 @@ def create_app(config=None):
     csrf.init_app(app)
 
     from . import auth, bookings, events
+
     app.register_blueprint(auth.bp)
     app.register_blueprint(events.bp)
     app.register_blueprint(bookings.bp)
 
     from .cli import register_cli
+
     register_cli(app)
 
     return app

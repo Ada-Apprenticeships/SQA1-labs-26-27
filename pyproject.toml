@@ -16,6 +16,8 @@ dev = [
     "pip-audit>=2.10.1",
     "pytest==9.1.1",
     "pytest-cov>=7.1.0",
+    "radon>=6.0.1",
+    "ruff>=0.17.4",
 ]
 
 [tool.uv]
@@ -30,3 +32,11 @@ testpaths = ["tests"]
 source_paths = ["app/"]
 only_mutate = ["app/booking_rules.py"]
 pytest_add_cli_args_test_selection = ["tests/test_booking_rules.py"]
+
+
+[tool.ruff]
+line-length = 100
+extend-exclude = ["labs"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B"]
