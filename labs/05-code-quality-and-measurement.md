@@ -37,7 +37,18 @@ uv run radon cc ../draft/app/bookings.py -s
 uv run radon mi ../draft/app -s
 ```
 
-Record the results in a table like this one, alongside your coverage and mutation figures from Lab 3:
+### Reading the results
+
+Each command gives you one number for the table:
+
+- **`ruff check`** (Ruff lint findings). Ruff lists every problem it finds, such as unused imports or imports out of order. Each one starts with a rule code (for example `I001`), and `[*]` means Ruff can fix it automatically. The list can be long, so the number you need is on the **last line**: `Found N errors`. For a one-line summary per rule instead, add `--statistics`.
+- **`ruff format --check`** (files needing reformatting). This checks layout only (spacing, line breaks, quotes) and changes nothing. Record the number from `N files would be reformatted`.
+- **`radon cc`** (complexity of `book()`). Find the line for `book`, for example `F 19:0 book - A (4)`. `F` means function, `19:0` is where it starts, `A` is the grade, and the number in brackets is its **cyclomatic complexity**: the number of independent paths through the code. Each `if` adds one. Lower is simpler and easier to test. Grade A is 1 to 5, B is 6 to 10, and anything above 10 is worth refactoring. Record the number and grade, for example `4 (A)`.
+- **`radon mi`** (maintainability index of `bookings.py`). Find the line for `bookings.py`, for example `bookings.py - A (68.00)`. The maintainability index runs from 0 to 100, combining size, complexity and comments, and **higher is better**. Record the number in brackets. Ignore the other files for now.
+- **Coverage and mutation score.** These come from Lab 3. For the draft, use the coverage you measured at the start of Lab 3 and your mutation score before you added tests (for example, 6 of 16 mutants killed). You will measure them again for the Now column.
+- **Open defect issues.** Count the open issues on your repository's **Issues** tab. For the draft, count every defect you logged in Lab 1.
+
+Record the results in a table like this one:
 
 | Measure | Draft | Now |
 |---|---|---|
@@ -59,7 +70,15 @@ uv run ruff check . --fix
 uv run ruff format .
 ```
 
-Review what `--fix` and `format` changed with `git diff` before committing: automated fixes still need checking.
+Review what `--fix` and `format` changed with `git diff` before committing: automated fixes still need checking. Then run the tests, and commit the tools, configuration and clean-up together:
+
+```bash
+uv run pytest
+git add pyproject.toml uv.lock app tests
+git commit -m "Add Ruff and radon; apply lint fixes and formatting"
+```
+
+Most files will be in this commit, because `ruff format` touches nearly all of them. That is expected.
 
 ## 4. Remove duplicated logic (worked example)
 
@@ -81,7 +100,16 @@ def test_places_left_counts_places_not_bookings(client, alice, bob, event):
     assert b"Places left: 1 of 5" in response.data
 ```
 
-Then add a property to the `Event` model in `app/models.py`, directly under its `bookings` relationship:
+Run `uv run pytest tests/test_events.py`. It **fails**: the page shows 4 places left, not 1. Commit the failing test on its own:
+
+```bash
+git add tests/test_events.py
+git commit -m "Add failing test for places left (#N)"
+```
+
+Replace `N` with the number of the issue you logged for this in Lab 1.
+
+Now fix it. Add a property to the `Event` model in `app/models.py`, directly under its `bookings` relationship:
 
 ```python
     @property
@@ -90,19 +118,68 @@ Then add a property to the `Event` model in `app/models.py`, directly under its 
         return places_remaining(self.capacity, [b.party_size for b in self.bookings])
 ```
 
-and use it in `app/templates/event.html`:
+Then use it in `app/templates/event.html`. Find this line, about line 8:
 
 ```jinja
-Places left: {{ event.places_left }} of {{ event.capacity }}
+    <p class="meta">Places left: {{ event.capacity - event.bookings|length }} of {{ event.capacity }}</p>
 ```
 
-Run the tests, then commit.
+and replace it with:
+
+```jinja
+    <p class="meta">Places left: {{ event.places_left }} of {{ event.capacity }}</p>
+```
+
+Only the calculation changes: the template now asks the model for `places_left` instead of working it out itself.
+
+Run `uv run pytest`: every test should now pass. Commit the fix:
+
+```bash
+git add app/models.py app/templates/event.html
+git commit -m "Use the booking rules for places left (fixes #N)"
+```
+
+Then run `git status`: there should be nothing left to commit before you start section 5.
 
 ## 5. Your turn
 
-1. Fill in the **Now** column of your table.
-2. Under the table, write three or four sentences interpreting it. Which measures improved? Which barely moved? Most importantly: **the draft already had a good complexity score and high coverage, yet it was full of defects. What does that tell you about relying on these measures?**
-3. Save the table and your interpretation in a file called `QUALITY.md`, commit it, and merge your pull request.
+**1. Create `QUALITY.md`.** In the top folder of your repository, create a file called `QUALITY.md`. Give it a heading, such as `# Quality measurements`, and paste in your table with the Draft column filled in.
+
+**2. Measure your current code.** Run the same commands as in section 2, but on `app` instead of `../draft/app`:
+
+```bash
+uv run ruff check app
+uv run ruff format --check app
+uv run radon cc app/bookings.py -s
+uv run radon mi app -s
+```
+
+After section 3, `ruff check` should report `All checks passed!` and `ruff format --check` should report that every file is `already formatted`, so record 0 for both.
+
+Then measure coverage and mutation score:
+
+```bash
+uv run pytest --cov=app
+rm -rf mutants && uv run mutmut run
+```
+
+- **Coverage:** use the percentage on the `TOTAL` line, in the `Cover` column.
+- **Mutation score:** use the counts on mutmut's progress line: killed (🎉) out of the total, for example `16 of 16`.
+- **Open defect issues:** count the open issues on your repository's **Issues** tab.
+
+Fill in the **Now** column.
+
+**3. Interpret it.** Under the table, write three or four sentences. Which measures improved? Which barely moved? Most importantly: **the draft already had a good complexity score and high coverage, yet it was full of defects. What does that tell you about relying on these measures?**
+
+**4. Commit, push and merge.**
+
+```bash
+git add QUALITY.md
+git commit -m "Add before-and-after quality measurements"
+git push -u origin quality/measurement
+```
+
+Open a pull request from `quality/measurement` to `main` (GitHub shows a prompt after you push, or run `gh pr create`). In the description, summarise what you changed in this lab: the Ruff fixes and formatting, and the `places_left` refactoring. Merge it, then run `git switch main && git pull`.
 
 ## Checkpoint
 
