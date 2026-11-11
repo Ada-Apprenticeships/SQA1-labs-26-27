@@ -43,24 +43,39 @@ This is **verification**: you use AI output on the strength of evidence, not bec
 
 ## 3. Record AI use in pull requests
 
-Create `.github/pull_request_template.md` so every pull request asks the question:
+You have been filling in the AI section of your pull request template since Lab 2. This pull request is the one where it matters most, so make it a good model for Assignment 1.
 
-```markdown
-## What this changes
+**1. Improve the AI's tests.** Edit `tests/test_booking_rules_ai.py`, using your notes from section 2:
 
-Fixes #
+- delete any test that checks behaviour the requirements never asked for, or correct it to match R1 to R7;
+- strengthen weak tests, for example by checking the exact error message instead of `is not None`;
+- keep the useful ideas.
 
-## How I tested it
+Check that the test selection in `pyproject.toml` is back to `tests/test_booking_rules.py`.
 
-## AI assistance
+**2. Run the checks your pipeline will run.** AI-generated code often does not match a project's style, so let Ruff tidy it before the Lab 6 gate rejects it:
 
-- [ ] No AI was used for this change
-- [ ] AI was used for:
-
-How I checked the AI output:
+```bash
+uv run ruff check . --fix
+uv run ruff format .
+uv run pytest
 ```
 
-Commit it with your improved tests (keep the AI's useful ideas, drop or fix the weak ones) and open a pull request. Fill in the AI section honestly, for example: "Copilot suggested tests for booking_rules. Mutation testing showed six survivors; I rewrote the boundary tests and kept its test for an empty bookings list."
+**3. Commit and push:**
+
+```bash
+git add tests/test_booking_rules_ai.py
+git commit -m "Add AI-suggested tests for booking rules, verified and improved"
+git push -u origin test/ai-generated
+```
+
+**4. Open a pull request** from `test/ai-generated` to `main`, and fill in the template:
+
+- **What this changes:** one or two sentences. There is no issue for this change, so delete the `Fixes #` line.
+- **How I tested it:** for example, the tests pass and your mutation testing results.
+- **AI assistance:** tick "AI was used for", then say honestly what the AI did and how you checked it, with evidence. For example: "Copilot suggested tests for booking_rules. Mutation testing showed six survivors; I rewrote the boundary tests and kept its test for an empty bookings list."
+
+Merge once the `quality` check is green.
 
 ## 4. Make a release recommendation
 
