@@ -79,6 +79,13 @@ Merge once the `quality` check is green.
 
 ## 4. Make a release recommendation
 
+Start a new branch from the updated `main`:
+
+```bash
+git switch main && git pull
+git switch -c docs/release-recommendation
+```
+
 Imagine the product owner asks: **"Can we release bookings on Monday?"** Using your evidence from Labs 1 to 6, write a short recommendation (about 200 words) in `QUALITY.md`, covering:
 
 - **Your answer:** release, release with conditions, or do not release.
@@ -88,9 +95,21 @@ Imagine the product owner asks: **"Can we release bookings on Monday?"** Using y
 
 There is no single right answer. A justified "do not release yet" can be stronger than an unjustified "yes".
 
+**Don't forget to commit and merge your `QUALITY.md`.** Your `main` branch is protected, so it goes through a pull request like everything else:
+
+```bash
+git add QUALITY.md
+git commit -m "Add release recommendation"
+git push -u origin docs/release-recommendation
+```
+
+Open a pull request, fill in the template (no issue, so delete the `Fixes #` line), and merge once the `quality` check is green. Then run `git switch main && git pull`.
+
 ## Checkpoint
 
-You have measured AI-generated tests against your own, a pull request template with an AI section, and a written release recommendation backed by evidence.
+You have measured AI-generated tests against your own, recorded how you checked them in a pull request, and merged a written release recommendation backed by evidence.
+
+To compare your work with a finished version, including a sample release recommendation and every pull request description, download the [labs exemplar](https://staticwebsitesjr.z33.web.core.windows.net/sqa1/sqa1-labs-exemplar.zip). Think about why each step was done, not just what was done.
 
 ## Apply it to Assignment 1
 
