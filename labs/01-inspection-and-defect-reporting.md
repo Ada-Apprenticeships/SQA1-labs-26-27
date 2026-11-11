@@ -18,7 +18,7 @@ The bookings feature was meant to meet these requirements. Inspection compares w
 | R6 | The organiser can see the attendee list, including any notes. |
 | R7 | The event page shows the correct number of places left. |
 
-## 1. Create a defect report template
+## 1. Create your templates
 
 First, check your repository on GitHub has an **Issues** tab next to **Code**. If not, go to **Settings → General → Features** and tick **Issues**. Do the same in your Assignment 1 repository.
 
@@ -53,13 +53,34 @@ labels: defect
 
 The file is not a report in itself. Once it is pushed, GitHub reads it and adds a **Defect report** option to the **New issue** button. Choosing it opens a new issue with these headings already filled in and the `defect` label applied, so every report you write has the same structure.
 
-Commit and push it:
+Now add a second template, for pull requests. Create `.github/pull_request_template.md`:
+
+```markdown
+## What this changes
+
+Fixes #
+
+## How I tested it
+
+## AI assistance
+
+- [ ] No AI was used for this change
+- [ ] AI was used for:
+
+How I checked the AI output:
+```
+
+This one pre-fills the description of every new pull request, so each one links to its issue, says how it was tested, and records whether AI helped and how you checked its output. You will open your first pull request in Lab 2. Recording AI use in every pull request is also a requirement of Assignment 1.
+
+Commit and push both templates:
 
 ```bash
-git add .github/ISSUE_TEMPLATE/defect.md
-git commit -m "Add defect report template"
+git add .github/ISSUE_TEMPLATE/defect.md .github/pull_request_template.md
+git commit -m "Add defect report and pull request templates"
 git push
 ```
+
+GitHub only uses templates from your default branch (`main`), which is where you are committing them.
 
 ## 2. Inspect with a checklist
 
@@ -149,7 +170,7 @@ You should have a defect template in the repository and at least five well-writt
 
 ## Apply it to Assignment 1
 
-Write down the requirements your assignment feature was meant to meet (Appendix A of the brief), then run the same checklist over your draft. Add the same `.github/ISSUE_TEMPLATE/defect.md` file to your Assignment 1 repository first, then log every confirmed defect as an issue using it.
+Write down the requirements your assignment feature was meant to meet (Appendix A of the brief), then run the same checklist over your draft. Add the same two templates, `.github/ISSUE_TEMPLATE/defect.md` and `.github/pull_request_template.md`, to your Assignment 1 repository first, then log every confirmed defect as an issue using the defect template.
 
 ## Stretch
 
