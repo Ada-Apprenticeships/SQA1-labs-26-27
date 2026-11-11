@@ -94,7 +94,13 @@ git push -u origin fix/overbooking
 
 ## 5. Open a pull request
 
-Open a pull request from `fix/overbooking` to `main` (GitHub shows a prompt after you push, or run `gh pr create`). In the description, say what changed and how you tested it, and include `Fixes #1`. Merge it, and the issue closes automatically.
+Open a pull request from `fix/overbooking` to `main` (GitHub shows a prompt after you push, or run `gh pr create`). The description starts with the template you made in Lab 1. Fill it in:
+
+- **What this changes:** one sentence, and complete `Fixes #1` with your issue number.
+- **How I tested it:** the boundary test, failing before the fix and passing after.
+- **AI assistance:** tick a box by changing `[ ]` to `[x]`. If AI helped, say what it did and how you checked it.
+
+Merge it, and the issue closes automatically. Use the template the same way in every pull request from now on.
 
 ## 6. Your turn (optional)
 
