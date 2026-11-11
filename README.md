@@ -32,7 +32,7 @@ Do the labs in order: each one builds on the code you changed in the previous on
 
 As you work, make sure you can explain **why** each step is done, not just what to type: why the test comes before the fix, why each change has its own branch, what a tool can and cannot tell you. In Assignment 1 you will need to talk through your own process and reasoning.
 
-You do not have to complete every part of every lab to understand the process. If you run short of time, the hint sheets and the Lab 6 exemplar can fill the gaps. But that is a judgement only you can make: be honest with yourself about whether you could explain the process confidently, and if not, go back and work through it.
+You do not have to complete every part of every lab to understand the process. If you run short of time, the hint sheets and the labs exemplar can fill the gaps. But that is a judgement only you can make: be honest with yourself about whether you could explain the process confidently, and if not, go back and work through it.
 
 ## Ground rules
 
