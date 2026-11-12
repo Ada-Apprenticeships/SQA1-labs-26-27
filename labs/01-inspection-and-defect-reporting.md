@@ -149,16 +149,16 @@ You can also create issues from the terminal: `gh issue create`.
 
 ## 5. Your turn
 
-Find and report **at least four more** defects using the checklist. Report each one as a new issue in the same way: **Issues → New issue → Defect report**. You only ever need the one `defect.md` template; it is reused for every issue.
+Find and report **at least two more** defects using the checklist, then as many more as you have time for. Report each one as a new issue in the same way: **Issues → New issue → Defect report**. You only ever need the one `defect.md` template; it is reused for every issue.
 
-Between them, try to cover:
+Try to find different kinds of defect, for example:
 
 - one missing or incomplete requirement;
 - one input that can crash the app (a 500 error);
 - one problem with who is allowed to do what;
 - one inconsistency between two parts of the feature.
 
-There are more than four to find. Stuck? Try the [Lab 1 hint sheet](https://staticwebsitesjr.z33.web.core.windows.net/sqa1/sqa1-lab1-hints.html), one hint at a time.
+There are many more to find, and you will not find them all today. That is fine: any you miss, you will meet in later labs, and you can log them then. Stuck? Try the [Lab 1 hint sheet](https://staticwebsitesjr.z33.web.core.windows.net/sqa1/sqa1-lab1-hints.html), one hint at a time.
 
 ## 6. Prioritise
 
@@ -166,7 +166,7 @@ Not every defect matters equally. For each issue, consider **impact** (what is t
 
 ## Checkpoint
 
-You should have a defect template in the repository and at least five well-written issues, each with steps to reproduce, severity, a quality characteristic and a priority.
+You should have a defect template in the repository and at least three well-written issues, each with steps to reproduce, severity, a quality characteristic and a priority.
 
 ## Apply it to Assignment 1
 
