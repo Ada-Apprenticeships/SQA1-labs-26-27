@@ -107,7 +107,7 @@ git add tests/test_events.py
 git commit -m "Add failing test for places left (#N)"
 ```
 
-Replace `N` with the number of the issue you logged for this in Lab 1.
+Replace `N` with the number of the issue you logged for this in Lab 1. If you did not log one, create it now.
 
 Now fix it. Add a property to the `Event` model in `app/models.py`, directly under its `bookings` relationship:
 
