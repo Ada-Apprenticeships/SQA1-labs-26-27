@@ -45,6 +45,8 @@ def test_bookings_cannot_exceed_capacity(client, alice, bob, event, second_party
 
 Each pair is (places Carol tries to book, total places booked afterwards). The `assert` checks that total.
 
+New to `parametrize`, fixtures or the test client? The [testing toolkit](https://staticwebsitesjr.z33.web.core.windows.net/sqa1/sqa1-testing-toolkit.html) explains each one, with a checklist of what to test that you can also use in your assignment.
+
 At the top of the file, add `import pytest` and change the conftest import to `from conftest import login, make_user`.
 
 `parametrize` runs the same test with different inputs, which is ideal for boundaries. Using a second user keeps this test about capacity only, so it will not be affected by other rules such as one booking per user.
