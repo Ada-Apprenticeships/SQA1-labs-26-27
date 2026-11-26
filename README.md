@@ -21,6 +21,8 @@ The Ada Events site in this repository has one new feature, **bookings**, drafte
 
 Do the labs in order: each one builds on the code you changed in the previous one.
 
+New to the code? The [app overview](docs/APP-OVERVIEW.md) has a one-line summary of every file and function.
+
 ## How each lab works
 
 - **Worked example:** follow the steps exactly. You will see the technique applied to one defect.
