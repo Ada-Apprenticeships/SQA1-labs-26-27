@@ -10,14 +10,14 @@ The Ada Events site in this repository has one new feature, **bookings**, drafte
 
 | Lab | Topic | Time | Assignment 1 criterion |
 |---|---|---|---|
-| [0](00-setup.md) | Set up and explore | 20 min | All |
-| [1](01-inspection-and-defect-reporting.md) | Code inspection and defect reporting | 75 min | Inspection, Completion and Defect Resolution |
-| [2](02-testing-and-regression-tests.md) | Testing and regression tests | 75 min | Testing |
-| [3](03-test-effectiveness.md) | Coverage, mutation testing and testable design | 90 min | Testing; Code Quality |
-| [4](04-security-assurance.md) | Security assurance | 75 min | Security Assurance |
-| [5](05-code-quality-and-measurement.md) | Code quality and measurement | 60 min | Code Quality and Measurement |
-| [6](06-ci-quality-gates.md) | Continuous integration as a quality gate | 75 min | CI/CD and Git Practices |
-| [7](07-ai-verification-and-release.md) | Verifying AI output and making a release recommendation | 75 min | All, especially the release recommendation |
+| [0](labs/00-setup.md) | Set up and explore | 20 min | All |
+| [1](labs/01-inspection-and-defect-reporting.md) | Code inspection and defect reporting | 75 min | Inspection, Completion and Defect Resolution |
+| [2](labs/02-testing-and-regression-tests.md) | Testing and regression tests | 75 min | Testing |
+| [3](labs/03-test-effectiveness.md) | Coverage, mutation testing and testable design | 90 min | Testing; Code Quality |
+| [4](labs/04-security-assurance.md) | Security assurance | 75 min | Security Assurance |
+| [5](labs/05-code-quality-and-measurement.md) | Code quality and measurement | 60 min | Code Quality and Measurement |
+| [6](labs/06-ci-quality-gates.md) | Continuous integration as a quality gate | 75 min | CI/CD and Git Practices |
+| [7](labs/07-ai-verification-and-release.md) | Verifying AI output and making a release recommendation | 75 min | All, especially the release recommendation |
 
 Do the labs in order: each one builds on the code you changed in the previous one.
 
